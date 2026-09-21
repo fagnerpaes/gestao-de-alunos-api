@@ -19,12 +19,12 @@ export const buscarPorId = asyncHandler(async (req, res) => {
 });
 
 export const criar = asyncHandler(async (req, res) => {
-  const aluno = criarService(req.body);
+  const aluno = await criarService(req.body);
   res.status(201).json(sanitizeAluno(aluno));
 });
 
 export const atualizar = asyncHandler(async (req, res) => {
-  res.json(sanitizeAluno(atualizarService(req.params.id, req.body)));
+  res.json(sanitizeAluno(await atualizarService(req.params.id, req.body)));
 });
 
 export const remover = asyncHandler(async (req, res) => {

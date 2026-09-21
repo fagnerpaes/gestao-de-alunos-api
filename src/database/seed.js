@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import db from './db.js';
 
 const agora = new Date().toISOString();

@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import db from '../database/db.js';
 import ApiError from '../utils/ApiError.js';
 import { JWT_SECRET, JWT_EXPIRES_IN } from '../config/jwt.js';
@@ -10,7 +10,7 @@ function gerarToken(usuario) {
   });
 }
 
-export function login({ email, senha }) {
+export async function login({ email, senha }) {
   if (!email || !senha) {
     throw new ApiError(400, 'Os campos "email" e "senha" são obrigatórios.');
   }
@@ -19,7 +19,7 @@ export function login({ email, senha }) {
   const aluno = db.all('alunos').find((a) => a.email === email);
   const usuario = admin || aluno;
 
-  if (!usuario || !bcrypt.compareSync(senha, usuario.senha)) {
+  if (!usuario || !(await bcrypt.compare(senha, usuario.senha))) {
     throw new ApiError(401, 'E-mail ou senha inválidos.');
   }
 

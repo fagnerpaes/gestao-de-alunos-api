@@ -1,14 +1,14 @@
 import { randomUUID } from 'node:crypto';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 
-export function createAluno({ nome, email, matricula, senha }) {
+export async function createAluno({ nome, email, matricula, senha }) {
   const now = new Date().toISOString();
   return {
     id: randomUUID(),
     nome,
     email,
     matricula,
-    senha: bcrypt.hashSync(senha, 10),
+    senha: await bcrypt.hash(senha, 10),
     role: 'aluno',
     createdAt: now,
     updatedAt: now,

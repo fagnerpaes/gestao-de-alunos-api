@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 
 export function createAdmin({ nome, email, senha }) {
   const now = new Date().toISOString();
