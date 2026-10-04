@@ -1,0 +1,35 @@
+[ 
+    {
+        "testTitle": "Validar que um aluno Wedney Silva que acaba de ser cadastrado pode ser matriculado em uma nova disciplina",
+        "dadosAluno": {
+                "nome": "Wedney Silva",
+                "email": "wedney.silva.8765@example.com",
+                "matricula": "W12345654321",
+                "senha": "senha123"            
+        },
+        "dadosDisciplina": {
+                "nome": "Pensamento Computacional",
+                "codigo": "COMP-101",
+                "cargaHoraria": 60
+        },
+        "statusCodeEsperado": 201        
+    },
+
+    {
+        "testTitle": "Validar que um aluno Adriano Queiroz que acaba de ser cadastrado pode ser matriculado em uma nova disciplina",
+        "dadosAluno": {
+                "nome": "Adriano Queiroz",
+                "email": "adriano.queiroz.1234@example.com",
+                "matricula": "A1234567890",
+                "senha": "senha123"            
+        },
+        "dadosDisciplina": {
+                "nome": "Pensamento Computacional",
+                "codigo": "COMP-101",
+                "cargaHoraria": 60
+        },
+        "statusCodeEsperado": 201        
+    }
+
+
+]

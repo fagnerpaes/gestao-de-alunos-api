@@ -1,0 +1,61 @@
+[
+        {
+                "titulo": "Registrar a entrega de um trabalho para o aluno João Rodrigues recém matricula em uma nova disciplina da PGATS.",
+                "dadosAluno": {
+                        "nome": "João Rodrigues",
+                        "email": "joao.rodrigues@example.com",
+                        "matricula": "RA123321",
+                        "senha": "senha123"
+                },
+                "dadosDisciplina": {
+                        "nome": "Testes de Serviço",
+                        "codigo": "PGATS-10",
+                        "cargaHoraria": 60
+                },
+                "dadosTrabalho": {
+                        "titulo": "Trabalho de Conclusão da Disciplina de Testes de Serviço.",
+                        "descricao": "Automatizar testes para logar como administrador, cadastrar um aluno, logar como aluno e registrar a entrega de um trabalho como aluno (usar Mocha, SuperTest e Chai)."
+                },
+                 "statusCodeEsperado": 201
+                
+        },
+        {
+                "titulo": "Registrar a entrega de um trabalho para a aluna Ana Souza recém matriculada em uma nova disciplina da PGATS.",
+                "dadosAluno": {
+                        "nome": "Ana Souza",
+                        "email": "ana.souza.pgats@example.com",
+                        "matricula": "RA456654",
+                        "senha": "senha123"
+                },
+                "dadosDisciplina": {
+                        "nome": "Qualidade de Software",
+                        "codigo": "PGATS-20",
+                        "cargaHoraria": 40
+                },
+                "dadosTrabalho": {
+                        "titulo": "Plano de Testes da Disciplina de Qualidade de Software.",
+                        "descricao": "Elaborar um plano de testes funcionais e não funcionais para a API de gestão de alunos (usar Mocha, SuperTest e Chai)."
+                },
+                 "statusCodeEsperado": 201
+                
+        },
+        {
+                "titulo": "Registrar a entrega de um trabalho com descrição longa para um aluno recém matriculado em uma nova disciplina da PGATS.",
+                "dadosAluno": {
+                        "nome": "Carlos Pereira",
+                        "email": "carlos.pereira.pgats@example.com",
+                        "matricula": "RA789987",
+                        "senha": "senha123"
+                },
+                "dadosDisciplina": {
+                        "nome": "Automação de Testes",
+                        "codigo": "PGATS-30",
+                        "cargaHoraria": 80
+                },
+                "dadosTrabalho": {
+                        "titulo": "Suíte de Automação E2E da Disciplina de Automação de Testes.",
+                        "descricao": "Desenvolver uma suíte de testes end-to-end cobrindo os fluxos de login, cadastro de alunos, matrícula em disciplinas e registro de trabalhos)."
+                },
+                "statusCodeEsperado": 201
+        }
+]

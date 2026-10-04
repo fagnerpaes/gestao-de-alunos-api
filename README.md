@@ -260,3 +260,13 @@ curl -X POST http://localhost:3000/api/alunos/aluno-ana-souza/trabalhos \
 
 > Novos registros criados via API recebem ids no formato UUID (gerados com
 > `crypto.randomUUID()`), diferente dos ids legíveis usados nos dados fake acima.
+
+
+
+#Automatizar testes para logar como administrador, cadastrar um aluno, logar como aluno e registrar a entrega de um #trabalho como aluno (usar Mocha, SuperTest e Chai) - revisar
+#Testes precisam implementar Data-Driven Testing, adicionando dados usados no teste em um arquivo JSON - X
+#O projeto deve usar Dotenv - ok
+#O projeto deve ter o login de Admin e de Usuário como Helpers - ok
+#Os testes precisam rodar na pipeline do Github Actions - X
+#refatorar o login do disciplina.external.test.js para usar o helper de login - X
+#adicionar no readme.md o setup para apagar os dados do banco a cada execução de testes
