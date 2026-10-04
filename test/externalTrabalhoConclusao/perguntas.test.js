@@ -7,7 +7,7 @@ describe('perguntas', () => {
 
     let token;
 
-    it.only('Deve efetuar login', async () => {
+    it('Deve efetuar login', async () => {
 
         const loginResposta = await request('http://localhost:3000')
             .post('/api/auth/login')
@@ -25,7 +25,7 @@ describe('perguntas', () => {
 
     });
 
-    it.only('Deve retornar o aluno cadastrado no banco de dados', async () => {
+    it('Deve retornar o aluno cadastrado no banco de dados', async () => {
 
         const resposta = await getURL()
             .get('/api/admin/alunos/aluno-ana-souza')
@@ -36,7 +36,7 @@ describe('perguntas', () => {
     });
 
 
-    it.only('Deve retornar Content-Type application/json na resposta', async () => {
+    it('Deve retornar Content-Type application/json na resposta', async () => {
        
         const resposta = await getURL()
             .get('/api/admin/alunos/aluno-ana-souza')

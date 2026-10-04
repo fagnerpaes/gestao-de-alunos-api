@@ -2,10 +2,9 @@ import mongoose from 'mongoose';
 import 'dotenv/config';
 
 
-// Prioridade: MONGODB_URI_TEST (local) → MONGODB_URI (CI) → fallback
-const uri = process.env.MONGODB_URI_TEST
-    || process.env.MONGODB_URI
-    || 'mongodb://127.0.0.1:27017/gestao-de-alunos-test';
+// Prioridade: MONGODB_URI  (local) (CI) → fallback
+const uri = process.env.MONGODB_URI
+    || 'mongodb://127.0.0.1:27017/gestao-de-alunos';
 
 // Conecta no MESMO banco que a API usa
 await mongoose.connect(uri);
