@@ -2,6 +2,27 @@
 
 API REST para gestão de alunos, disciplinas, notas e trabalhos, com persistência em MongoDB.
 
+## Entrega da Avaliação
+
+Este repositório é um **fork** de [juliodelimas/gestao-de-alunos-api](https://github.com/juliodelimas/gestao-de-alunos-api), entregue como projeto final da disciplina. Abaixo, o mapa de como cada requisito foi implementado.
+
+### Mapa de requisitos → implementação
+
+| Requisito da disciplina | Onde está implementado |
+|---|---|
+| **Testes automatizados** (login admin → cadastrar aluno → login aluno → registrar trabalho) | `test/externalTrabalhoConclusao/missao.test.js` — fluxo completo de ponta a ponta |
+| **Data-Driven Testing** (dados em JSON) | `test/fixtures/missao.json` (e `matriculas.json`, `trabalhos.json`) |
+| **Dotenv** | `dotenv/config` em `src/server.js` e `test/setup.js`; modelo em `.env.example` |
+| **Helpers de login** (Admin e Usuário) | `test/helpers/auth.js` — `loginAndGetTokenAdmin()` e `loginAndGetToken()` |
+| **Pipeline GitHub Actions** | `.github/workflows/tests.yml` — badge de status abaixo |
+
+### Como validar a entrega
+
+```bash
+npm install
+npm test # roda todos os testes (internos e externos)
+``` 
+
 ## Descrição
 
 A API modela um cenário simples de gestão escolar com dois tipos de uso:
@@ -41,6 +62,8 @@ banco está vazio (veja [Dados fake pré-carregados](#dados-fake-pré-carregados
 - **morgan** — log de requisições HTTP no console
 - **nodemon** (dependência de desenvolvimento) — reinício automático do servidor durante o
   desenvolvimento
+- **mocha, chai, supertest** (dependências de desenvolvimento) — testes automatizados
+- **start-server-and-test** (dependência de desenvolvimento) — sobe a API e executa os testes
 
 A autenticação é real: senhas com hash (bcrypt) e sessões via JWT assinado.
 
@@ -51,29 +74,42 @@ src/
   app.js                 # configuração do Express: middlewares, Swagger, rotas, erros
   server.js              # ponto de entrada: sobe o servidor HTTP (separado do app)
   config/
-    jwt.js                # segredo e tempo de expiração do JWT
+    jwt.js               # segredo e tempo de expiração do JWT
   routes/                # definição das rotas (Express Router), sem lógica de negócio
     index.js
-    auth.routes.js         # login -> /api/auth (público)
-    aluno.routes.js       # rotas de autoatendimento do aluno -> /api/alunos (protegidas)
-    admin/                # rotas do administrador -> /api/admin (protegidas, papel admin)
-  controllers/            # lida com req/res, delega para os services
-  services/               # regras de negócio e validações
-  models/                 # schemas Mongoose das entidades, incluindo hash de senha (pre-save)
+    auth.routes.js       # login -> /api/auth (público)
+    aluno.routes.js      # rotas de autoatendimento do aluno -> /api/alunos (protegidas)
+    admin/               # rotas do administrador -> /api/admin (protegidas, papel admin)
+  controllers/           # lida com req/res, delega para os services
+  services/              # regras de negócio e validações
+  models/                # schemas Mongoose das entidades, incluindo hash de senha (pre-save)
   database/
-    db.js                 # conexão com o MongoDB via Mongoose
-    seed.js                # dados fake carregados na inicialização, se o banco estiver vazio (inclui o admin)
+    db.js                # conexão com o MongoDB via Mongoose
+    seed.js              # dados fake carregados na inicialização, se o banco estiver vazio (inclui o admin)
   middlewares/
-    authenticate.js        # valida o JWT e popula req.user
-    authorize.js            # restringe uma rota a um ou mais papéis (ex.: "admin")
+    authenticate.js      # valida o JWT e popula req.user
+    authorize.js         # restringe uma rota a um ou mais papéis (ex.: "admin")
     authorizeSelfOrAdmin.js # em /api/alunos/:alunoId, exige ser o próprio aluno ou um admin
     notFound.js
     errorHandler.js
   utils/
     ApiError.js
     asyncHandler.js
+test/
+  setup.js               # conexão com o banco de teste + restauração do estado inicial
+  helpers/
+    api.js               # base URL das requisições
+    auth.js              # login e obtenção de token (admin e aluno)
+  factories/             # geradores de dados (aluno, disciplina)
+  fixtures/              # dados de teste em JSON (DDT)
+    matriculas.json
+    missao.json
+    trabalhos.json
+  internal/              # testes contra o app em memória (Supertest)
+  external/              # testes contra a API em localhost:3000
+  externalTrabalhoConclusao/ # testes de entrega final
 docs/
-  openapi.yaml            # especificação Swagger/OpenAPI (fonte da documentação)
+  openapi.yaml           # especificação Swagger/OpenAPI (fonte da documentação)
 ```
 
 ## Instalação e execução
@@ -106,10 +142,47 @@ container), defina a variável de ambiente `MONGODB_URI` antes de subir o servid
 ```bash
 MONGODB_URI="mongodb://usuario:senha@host:27017/nome-do-banco" npm start
 ```
-
 Na primeira execução com o banco vazio, a API popula automaticamente as coleções com o conjunto de
 dados fake descrito em [Dados fake pré-carregados](#dados-fake-pré-carregados). Em execuções
 seguintes, os dados já existentes são preservados.
+
+## Testes
+A suíte cobre as rotas da API com Mocha, Chai e Supertest, organizada em testes internos (contra o app em memória) e externos (contra a API em http://localhost:3000).
+
+### Como Rodar
+
+```bash
+npm test
+```
+
+O comando sobe a API, aguarda responder em `http://localhost:3000`, executa toda a suíte e encerra o servidor ao final (via `start-server-and-test`).
+
+## Convenções da suíte
+
+- **Banco de dados**: os testes usam `MONGODB_URI` para execução de testes.
+- **Estado inicial previsível**: o `setup.js` limpa as coleções e roda o seed antes de cada teste, evitando erros por dados já existentes.
+- **DDT com fixtures**: cenários parametrizados em JSON, com `titulo`, dados de entrada e `statusCodeEsperado`.
+- **Um único disconnect**: o encerramento da conexão fica no `after` global do `setup.js`.
+
+## Pipeline de CI (GitHub Actions)
+
+O repositório inclui um workflow de integração contínua em `.github/workflows/tests.yml` que roda a suíte completa a cada push/PR na branch `main`:
+
+- Sobe um container **MongoDB 7** com health check
+- Instala as dependências com `npm ci`
+- Executa `npm test` apontando para o banco de teste
+
+## Variáveis de ambiente
+
+Crie um arquivo `.env` na raiz (não versionado) a partir do modelo `.env.example`:
+
+| Variável | Descrição | Padrão |
+| :--- | :--- | :--- |
+| `BASE_URL` | URL base da API | `http://localhost:3000` |
+| `MONGODB_URI` | Conexão do servidor (dev) | `mongodb://127.0.0.1:27017/gestao-de-alunos` |
+| `ADMIN_EMAIL` | E-mail do admin (login nos testes) | `admin@escola.com` |
+| `ADMIN_SENHA` | Senha do admin | `admin123` |
+
 
 ## Documentação da API (Swagger)
 
@@ -260,13 +333,3 @@ curl -X POST http://localhost:3000/api/alunos/aluno-ana-souza/trabalhos \
 
 > Novos registros criados via API recebem ids no formato UUID (gerados com
 > `crypto.randomUUID()`), diferente dos ids legíveis usados nos dados fake acima.
-
-
-
-#Automatizar testes para logar como administrador, cadastrar um aluno, logar como aluno e registrar a entrega de um #trabalho como aluno (usar Mocha, SuperTest e Chai) - revisar
-#Testes precisam implementar Data-Driven Testing, adicionando dados usados no teste em um arquivo JSON - X
-#O projeto deve usar Dotenv - ok
-#O projeto deve ter o login de Admin e de Usuário como Helpers - ok
-#Os testes precisam rodar na pipeline do Github Actions - X
-#refatorar o login do disciplina.external.test.js para usar o helper de login - X
-#adicionar no readme.md o setup para apagar os dados do banco a cada execução de testes
