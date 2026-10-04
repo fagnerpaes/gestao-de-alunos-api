@@ -3,7 +3,6 @@ import { getURL } from '../helpers/api.js';
 import { expect } from 'chai';
 import { loginAndGetTokenAdmin } from '../helpers/auth.js';
 import testesRegistrarTrabalhos from '../fixtures/missao.json' with { type: 'json'};
-//import { get } from 'mongoose';
 import { loginAndGetToken } from '../helpers/auth.js'; 
 
 let tokenAdmin;
